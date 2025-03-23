@@ -21,8 +21,8 @@ const DB_URI = process.env.DB_URI || "";
 connectDatabase(DB_URI);
 
 // using middlewares
-app.use(express.urlencoded({ extended: false }));
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 // app.use(express.json());
 
 // serving static files

@@ -25,11 +25,6 @@ export const Authenticate = (
 
       const access_token = authHeader.split(" ")[1];
 
-      console.log(
-        "👊 ~ authentication.middleware.ts:23 ~ return ~ access_token:",
-        access_token
-      );
-
       if (!access_token) {
         throw new CustomError("Unauthorized, token is missing", 401);
       }
@@ -39,11 +34,6 @@ export const Authenticate = (
       if (decoded.exp && decoded.exp * 1000 < Date.now()) {
         throw new CustomError("Unauthorized, access denied", 401);
       }
-
-      console.log(
-        "👊 ~ authentication.middleware.ts:27 ~ return ~ decoded:",
-        decoded
-      );
 
       if (!decoded) {
         throw new CustomError("Unauthorized, Invalid token", 401);

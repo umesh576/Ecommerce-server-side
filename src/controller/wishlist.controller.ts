@@ -9,7 +9,7 @@ import mongoose from "mongoose";
 
 export const addToWishlist = asyncHandler(
   async (req: Request, res: Response) => {
-    const productId = req.params.productID;
+    const productId = req.params.id;
 
     const user = req.user;
 
@@ -57,6 +57,7 @@ export const addToWishlist = asyncHandler(
 export const removeFromWishlist = asyncHandler(
   async (req: Request, res: Response) => {
     const productId = req.params.id;
+    console.log(req.body);
     const user = req.user;
 
     if (!productId) {

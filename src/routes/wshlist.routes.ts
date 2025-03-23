@@ -11,7 +11,7 @@ import { onlyUser } from "../@types/global.types";
 const router = express.Router();
 
 //add to wishlist
-router.post("/", Authenticate(onlyUser), addToWishlist);
+router.post("/:id", Authenticate(onlyUser), addToWishlist);
 
 //clear wishlist
 router.delete("/", Authenticate(onlyUser), clearWishlist);
