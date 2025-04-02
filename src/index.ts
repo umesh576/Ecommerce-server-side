@@ -25,10 +25,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 // app.use(express.json());
 
-app.use("/", (req: Request, res: Response) => {
-  res.status(200).json({ message: "server is up & running" });
-});
-
 // serving static files
 app.use("/api/uploads", express.static(path.join(__dirname, "../", "uploads")));
 
@@ -42,6 +38,10 @@ app.use("/api/review", reviewRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlist);
 app.use("/api/order", orderRouter);
+
+app.use("/", (req: Request, res: Response) => {
+  res.status(200).json({ message: "server is up & running" });
+});
 
 // handle not found path
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
