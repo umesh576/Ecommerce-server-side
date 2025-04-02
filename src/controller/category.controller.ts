@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler.utils";
 import Category from "../model/category.model";
 import CustomError from "../middleware/errorhandler.middleware";
-import { getPagination } from "../utils/pagenation.utils";
 
 export const create = asyncHandler(async (req: Request, res: Response) => {
   const body = req.body;
