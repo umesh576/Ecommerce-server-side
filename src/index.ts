@@ -3,7 +3,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { connectDatabase } from "./config/database.config";
 import path from "path";
 import CustomError from "./middleware/errorhandler.middleware";
-
+import cors from "cors";
 // importing routes
 import userRoutes from "./routes/user.routes";
 import productRoutes from "./routes/product.routes";
@@ -29,6 +29,11 @@ app.use(express.json());
 app.use("/api/uploads", express.static(path.join(__dirname, "../", "uploads")));
 
 console.log("👊 ~ index.ts:23 ~ __dirname:", __dirname);
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // using routes
 app.use("/api/user", userRoutes);

@@ -8,6 +8,7 @@ const express_1 = __importDefault(require("express"));
 const database_config_1 = require("./config/database.config");
 const path_1 = __importDefault(require("path"));
 const errorhandler_middleware_1 = __importDefault(require("./middleware/errorhandler.middleware"));
+const cors_1 = __importDefault(require("cors"));
 // importing routes
 const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const product_routes_1 = __importDefault(require("./routes/product.routes"));
@@ -27,6 +28,9 @@ app.use(express_1.default.json());
 // serving static files
 app.use("/api/uploads", express_1.default.static(path_1.default.join(__dirname, "../", "uploads")));
 console.log("👊 ~ index.ts:23 ~ __dirname:", __dirname);
+app.use((0, cors_1.default)({
+    origin: "*",
+}));
 // using routes
 app.use("/api/user", user_routes_1.default);
 app.use("/api/product", product_routes_1.default);
