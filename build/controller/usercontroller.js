@@ -113,7 +113,7 @@ exports.login = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(v
         return;
     }
     // 4. compare hash
-    const isMatch = (0, bcrypt_utils_1.compare)(password, user.password);
+    const isMatch = yield (0, bcrypt_utils_1.compare)(password, user.password);
     if (!isMatch) {
         throw new errorhandler_middleware_1.default("Email or password does not match", 400);
         return;
