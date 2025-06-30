@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.update = exports.register = exports.getAll = void 0;
+exports.adminLogin = exports.login = exports.update = exports.register = exports.getAll = void 0;
 const user_model_1 = __importDefault(require("../model/user.model"));
 const bcrypt_utils_1 = require("../utils/bcrypt.utils");
 const jwt_utils_1 = require("../utils/jwt.utils");
 const asyncHandler_utils_1 = require("../utils/asyncHandler.utils");
 const errorhandler_middleware_1 = __importDefault(require("../middleware/errorhandler.middleware"));
 const pagenation_utils_1 = require("../utils/pagenation.utils");
+const global_types_1 = require("../@types/global.types");
 // import { regex } from "uuidv4";
 exports.getAll = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { limit, page, query } = req.query;
@@ -138,5 +139,49 @@ exports.login = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(v
         success: true,
         message: "Login success",
         token,
+    });
+}));
+exports.adminLogin = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // 1. email pass <-- body
+    const { email, password } = req.body;
+    if (!email) {
+        throw new errorhandler_middleware_1.default("Email is required", 400);
+    }
+    if (!password) {
+        throw new errorhandler_middleware_1.default("Password is required", 400);
+    }
+    // 2.const user= user.findOne({email:email})
+    const user = yield user_model_1.default.findOne({ email });
+    // 3 if !user ->  error
+    if (!user || (user === null || user === void 0 ? void 0 : user.role) !== global_types_1.Role.admin) {
+        throw new errorhandler_middleware_1.default("Email or password does not match", 400);
+    }
+    // 4. compare hash
+    const isMatch = yield (0, bcrypt_utils_1.compare)(password, user.password);
+    console.log("is match", isMatch);
+    if (!isMatch) {
+        throw new errorhandler_middleware_1.default("Email or password does not match", 400);
+    }
+    const payload = {
+        _id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: user.role,
+    };
+    const token = (0, jwt_utils_1.generateToken)(payload);
+    console.log("👊 ~ user.controller.ts:151 ~ login ~ token:", token);
+    res
+        .cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+    })
+        .status(200)
+        .json({
+        status: "success",
+        success: true,
+        message: "Login success",
+        token,
+        user,
     });
 }));
