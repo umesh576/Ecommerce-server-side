@@ -52,9 +52,7 @@ export const getCartByUserId = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.params.id;
 
-    const cart = await Cart.findOne({ user: userId })
-      .populate("user", "-password")
-      .populate("items.product");
+    const cart = await Cart.findOne({ user: userId }).populate("items.product");
     if (!cart) {
       throw new CustomError("Cart not found", 404);
     }
