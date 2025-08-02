@@ -17,7 +17,6 @@ const asyncHandler_utils_1 = require("../utils/asyncHandler.utils");
 const errorhandler_middleware_1 = __importDefault(require("../middleware/errorhandler.middleware"));
 const cart_model_1 = require("../model/cart.model");
 const product_model_1 = __importDefault(require("../model/product.model"));
-const pagenation_utils_1 = require("../utils/pagenation.utils");
 exports.create = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, productId, quantity } = req.body;
     let cart;
@@ -52,31 +51,19 @@ exports.create = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(
     });
 }));
 exports.getCartByUserId = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { limit, page } = req.query;
-    const currentPage = parseInt(page) || 1;
-    const queryLimit = parseInt(limit) || 10;
-    const skip = (currentPage - 1) * queryLimit;
     const userId = req.params.id;
-    const cart = yield cart_model_1.Cart.findOne({ user: userId }).populate({
-        path: "items.product",
-        select: "name price description",
-    });
+    const cart = yield cart_model_1.Cart.findOne({ user: userId })
+        .populate("user", "-password")
+        .populate("items.product");
     if (!cart) {
         throw new errorhandler_middleware_1.default("Cart not found", 404);
     }
-    const totalCount = cart.items.length;
-    const paginatedItems = cart.items.slice(skip, skip + queryLimit);
-    const paginatedCart = Object.assign(Object.assign({}, cart.toObject()), { items: paginatedItems });
-    const pagination = (0, pagenation_utils_1.getPagination)(currentPage, queryLimit, totalCount);
     // Send the response with the paginated cart
     res.status(200).json({
         status: "success",
         success: true,
         message: "Cart fetched successfully",
-        data: {
-            data: paginatedCart, // Paginated cart data
-            pagination, // Pagination metadata
-        },
+        data: cart,
     });
 }));
 exports.clearCart = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

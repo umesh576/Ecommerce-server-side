@@ -3,7 +3,6 @@ import { asyncHandler } from "../utils/asyncHandler.utils";
 import CustomError from "../middleware/errorhandler.middleware";
 import { Cart } from "../model/cart.model";
 import Product from "../model/product.model";
-import { getPagination } from "../utils/pagenation.utils";
 
 export const create = asyncHandler(async (req: Request, res: Response) => {
   const { userId, productId, quantity } = req.body;
