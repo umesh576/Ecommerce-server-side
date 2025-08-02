@@ -51,43 +51,21 @@ export const create = asyncHandler(async (req: Request, res: Response) => {
 
 export const getCartByUserId = asyncHandler(
   async (req: Request, res: Response) => {
-    const { limit, page } = req.query;
-
-    const currentPage = parseInt(page as string) || 1;
-    const queryLimit = parseInt(limit as string) || 10;
-    const skip = (currentPage - 1) * queryLimit;
-
     const userId = req.params.id;
 
-    const cart = await Cart.findOne({ user: userId }).populate({
-      path: "items.product",
-      select: "name price description",
-    });
-
+    const cart = await Cart.findOne({ user: userId })
+      .populate("user", "-password")
+      .populate("items.product");
     if (!cart) {
       throw new CustomError("Cart not found", 404);
     }
-
-    const totalCount = cart.items.length;
-
-    const paginatedItems = cart.items.slice(skip, skip + queryLimit);
-
-    const paginatedCart = {
-      ...cart.toObject(),
-      items: paginatedItems,
-    };
-
-    const pagination = getPagination(currentPage, queryLimit, totalCount);
 
     // Send the response with the paginated cart
     res.status(200).json({
       status: "success",
       success: true,
       message: "Cart fetched successfully",
-      data: {
-        data: paginatedCart, // Paginated cart data
-        pagination, // Pagination metadata
-      },
+      data: cart,
     });
   }
 );
