@@ -52,9 +52,7 @@ exports.create = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(
 }));
 exports.getCartByUserId = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.params.id;
-    const cart = yield cart_model_1.Cart.findOne({ user: userId })
-        .populate("user", "-password")
-        .populate("items.product");
+    const cart = yield cart_model_1.Cart.findOne({ user: userId }).populate("items.product");
     if (!cart) {
         throw new errorhandler_middleware_1.default("Cart not found", 404);
     }
