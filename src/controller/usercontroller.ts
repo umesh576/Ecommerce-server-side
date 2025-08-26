@@ -136,8 +136,6 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   if (!isMatch) {
     throw new CustomError("Email or password does not match", 400);
-
-    return;
   }
 
   const payload: IPayload = {
