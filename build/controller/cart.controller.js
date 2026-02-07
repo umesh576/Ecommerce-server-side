@@ -20,7 +20,6 @@ const product_model_1 = __importDefault(require("../model/product.model"));
 exports.create = (0, asyncHandler_utils_1.asyncHandler)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, productId, quantity } = req.body;
     let cart;
-    console.log(userId);
     if (!userId) {
         throw new errorhandler_middleware_1.default("userId is required", 400);
     }

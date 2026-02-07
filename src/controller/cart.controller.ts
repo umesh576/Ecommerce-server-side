@@ -7,7 +7,6 @@ import Product from "../model/product.model";
 export const create = asyncHandler(async (req: Request, res: Response) => {
   const { userId, productId, quantity } = req.body;
   let cart;
-  console.log(userId);
   if (!userId) {
     throw new CustomError("userId is required", 400);
   }
